@@ -1,1 +1,34 @@
-
+ <style>
+        body { font-family: 'Inter', sans-serif; }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container { height: 350px; }
+        }
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 100%;
+            background-color: #e5e7eb;
+            z-index: 0;
+        }
+        .timeline-item.active .timeline-dot {
+            background-color: #be185d; /* Pink-700 equivalent for accent */
+            border-color: #fce7f3;
+            transform: scale(1.25);
+        }
+        .nav-btn.active {
+            border-bottom: 2px solid #be185d;
+            color: #be185d;
+            font-weight: 600;
+        }
+    </style>
