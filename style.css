@@ -1,34 +1,59 @@
- <style>
-        body { font-family: 'Inter', sans-serif; }
+    <style>
+        /* Typography & Base */
+        body { font-family: 'Open Sans', sans-serif; background-color: #FAFAFA; color: #111; }
+        h1, h2, h3, h4, .tribal-font { font-family: 'Oswald', sans-serif; text-transform: uppercase; }
+        
+        /* Tribal Color Palette Variables */
+        :root {
+            --color-red: #D92525;
+            --color-yellow: #F2A900;
+            --color-black: #1a1a1a;
+            --color-white: #ffffff;
+        }
+
+        /* Geometric Patterns */
+        .tribal-border-top {
+            background-image: linear-gradient(135deg, var(--color-black) 25%, transparent 25%), 
+                              linear-gradient(225deg, var(--color-black) 25%, transparent 25%), 
+                              linear-gradient(45deg, var(--color-black) 25%, transparent 25%), 
+                              linear-gradient(315deg, var(--color-black) 25%, transparent 25%);
+            background-position:  10px 0, 10px 0, 0 0, 0 0;
+            background-size: 20px 20px;
+            background-repeat: repeat-x;
+            height: 10px;
+            width: 100%;
+        }
+
+        .medicine-wheel-bg {
+            background: conic-gradient(
+                var(--color-white) 0% 25%, 
+                var(--color-yellow) 25% 50%, 
+                var(--color-red) 50% 75%, 
+                var(--color-black) 75% 100%
+            );
+            border-radius: 50%;
+        }
+
+        /* Chart Containers */
         .chart-container {
             position: relative;
             width: 100%;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 300px;
+            max-width: 500px;
+            margin: 0 auto;
+            height: 350px;
             max-height: 400px;
         }
-        @media (min-width: 768px) {
-            .chart-container { height: 350px; }
-        }
-        .timeline-line {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 4px;
-            height: 100%;
-            background-color: #e5e7eb;
-            z-index: 0;
-        }
-        .timeline-item.active .timeline-dot {
-            background-color: #be185d; /* Pink-700 equivalent for accent */
-            border-color: #fce7f3;
-            transform: scale(1.25);
-        }
-        .nav-btn.active {
-            border-bottom: 2px solid #be185d;
-            color: #be185d;
-            font-weight: 600;
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: var(--color-red); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--color-black); }
+
+        /* Timeline Node Active State */
+        .timeline-node.active {
+            border-color: var(--color-red);
+            background-color: var(--color-yellow);
+            transform: scale(1.2);
         }
     </style>
