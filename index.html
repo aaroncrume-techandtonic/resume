@@ -3,485 +3,446 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aaron Lee Crume - Interactive Professional Profile</title>
+    <title>Aaron Lee Crume | Professional Profile</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Inter', sans-serif; }
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 300px;
-            max-height: 400px;
-        }
-        @media (min-width: 768px) {
-            .chart-container { height: 350px; }
-        }
-        .timeline-line {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 4px;
-            height: 100%;
-            background-color: #e5e7eb;
-            z-index: 0;
-        }
-        .timeline-item.active .timeline-dot {
-            background-color: #be185d; /* Pink-700 equivalent for accent */
-            border-color: #fce7f3;
-            transform: scale(1.25);
-        }
-        .nav-btn.active {
-            border-bottom: 2px solid #be185d;
-            color: #be185d;
-            font-weight: 600;
-        }
-    </style>
-    <!-- Chosen Palette: Warm Neutrals & Professional Slate (Background: #f8fafc, Text: #334155, Accent: #be185d (Deep Rose/Professional Red)) -->
-    <!-- Application Structure Plan: 
-         1. Hero Section: Immediate identification (Name, Target Role, Quick Stats).
-         2. Dashboard Overview: High-level metrics visualization (Skill distribution, Experience breakdown) to prove "25+ years" claim instantly.
-         3. Interactive Timeline: The core exploration area. Users click through job history. Keeps the interface clean while allowing deep dives into specific duties.
-         4. Competency Matrix: A filterable skills area specifically mapped to the Job Description (Leadership, Compliance, Ops).
-         5. Certifications & Education: Static verification data.
-         RATIONALE: This structure proves the candidate's fit for "Lead Server" by front-loading leadership metrics and enabling a focused review of relevant history (e.g., "Casino Experience") without reading a wall of text.
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    
+
+
+    <!-- Chosen Palette: High Contrast Tribal (Red #D92525, Yellow #F2A900, Black #1a1a1a, White #FFF) -->
+    <!-- Application Structure Plan:
+         1. Hero: "The Four Directions" concept mapping skills to the Medicine Wheel (Leadership, Tech, Service, Compliance).
+         2. Philosophy Section: Explaining the "Lead Server" mindset using tribal metaphors (Community, Stewardship).
+         3. Interactive Path (Timeline): Vertical flow showcasing the 25+ year journey, including the 6-year casino tenure and Tech degree.
+         4. Technical Integration: A section specifically highlighting the BS in CIS and how it applies to modern POS/Inventory systems.
+         5. Competency Matrix: Data visualization of skills.
     -->
     <!-- Visualization & Content Choices:
-         1. Resume Content -> Goal: Show breadth of experience -> Method: Bar Chart (Years per Venue) -> Interaction: None (Visual Anchor) -> Chart.js.
-         2. Resume Skills -> Goal: Highlight versatility -> Method: Radar Chart (Competency Balance) -> Interaction: None (Visual Anchor) -> Chart.js.
-         3. Employment History -> Goal: Detail exploration -> Method: Interactive Vertical Timeline -> Interaction: Click to expand details -> Vanilla JS.
-         4. Key Qualities -> Goal: Quick scanning -> Method: Icon/Text Grid -> Interaction: Hover effects -> HTML/CSS.
+         1. The Medicine Wheel -> Goal: Conceptual Overview -> Method: Doughnut Chart (Chart.js) -> Interaction: Click segment to filter text.
+         2. Experience Path -> Goal: History -> Method: Interactive Timeline -> Interaction: Click to reveal details.
+         3. Tech vs. Service Balance -> Goal: Show versatility -> Method: Bar Chart -> Interaction: None.
          CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
     -->
 </head>
-<body class="bg-slate-50 text-slate-700">
+<body class="flex flex-col min-h-screen">
+
+    <!-- Top Border Pattern -->
+    <div class="h-4 bg-yellow-500 w-full"></div>
+    <div class="h-4 bg-red-600 w-full"></div>
+    <div class="h-4 bg-black w-full"></div>
 
     <!-- Navigation -->
-    <nav class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <span class="text-xl font-bold text-slate-800">ALC Profile</span>
+    <nav class="bg-white border-b-4 border-black sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex items-center space-x-4">
+                    <div class="w-8 h-8 medicine-wheel-bg border-2 border-black"></div>
+                    <span class="text-2xl font-bold tracking-wider text-black tribal-font">Aaron Lee Crume</span>
                 </div>
-                <div class="hidden sm:flex space-x-8 items-center">
-                    <button onclick="scrollToSection('hero')" class="nav-btn active px-1 pt-1 text-sm font-medium text-slate-500 hover:text-slate-700">Home</button>
-                    <button onclick="scrollToSection('dashboard')" class="nav-btn px-1 pt-1 text-sm font-medium text-slate-500 hover:text-slate-700">Analytics</button>
-                    <button onclick="scrollToSection('timeline')" class="nav-btn px-1 pt-1 text-sm font-medium text-slate-500 hover:text-slate-700">Experience</button>
-                    <button onclick="scrollToSection('skills')" class="nav-btn px-1 pt-1 text-sm font-medium text-slate-500 hover:text-slate-700">Competencies</button>
+                <div class="hidden md:flex space-x-8">
+                    <button onclick="scrollToId('philosophy')" class="text-black font-bold hover:text-red-600 transition uppercase text-sm tracking-widest">Philosophy</button>
+                    <button onclick="scrollToId('path')" class="text-black font-bold hover:text-red-600 transition uppercase text-sm tracking-widest">The Path</button>
+                    <button onclick="scrollToId('tech')" class="text-black font-bold hover:text-red-600 transition uppercase text-sm tracking-widest">Tech Integration</button>
                 </div>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <header id="hero" class="bg-white border-b border-slate-200">
-        <div class="max-w-6xl mx-auto px-4 py-16 sm:px-6 lg:px-8 text-center">
-            <h1 class="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight mb-4">Aaron Lee Crume</h1>
-            <p class="text-xl text-rose-700 font-semibold mb-6">Candidate for Lead Server | Food & Beverage Professional</p>
-            <p class="max-w-2xl mx-auto text-slate-600 mb-8">
-                Over 25 years of high-volume dining, lounge, and management experience. 
-                Expert in ABC regulations, staff training, and casino-grade cash handling operations.
-            </p>
-            <div class="flex justify-center gap-4 flex-wrap">
-                <div class="bg-slate-100 px-6 py-3 rounded-lg border border-slate-200">
-                    <span class="block text-2xl font-bold text-slate-800">25+</span>
-                    <span class="text-sm text-slate-500">Years Experience</span>
+    <header class="bg-neutral-50 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center">
+            
+            <!-- Text Content -->
+            <div class="md:w-1/2 z-10 text-center md:text-left">
+                <div class="inline-block bg-black text-white px-4 py-1 mb-4 text-sm font-bold tracking-widest uppercase transform -skew-x-12">
+                    Lead Candidate • 25+ Years Experience
                 </div>
-                <div class="bg-slate-100 px-6 py-3 rounded-lg border border-slate-200">
-                    <span class="block text-2xl font-bold text-slate-800">GM</span>
-                    <span class="text-sm text-slate-500">Former Level</span>
-                </div>
-                <div class="bg-slate-100 px-6 py-3 rounded-lg border border-slate-200">
-                    <span class="block text-2xl font-bold text-slate-800">100%</span>
-                    <span class="text-sm text-slate-500">Compliance Record</span>
+                <h1 class="text-5xl md:text-6xl font-black text-black mb-6 leading-tight">
+                    Service.<br>
+                    <span class="text-red-600">Leadership.</span><br>
+                    Technology.
+                </h1>
+                <p class="text-lg text-gray-700 mb-8 max-w-lg leading-relaxed font-light">
+                    An introduction to a veteran Food & Beverage professional who bridges the gap between traditional hospitality warmth and modern network administration precision.
+                </p>
+                <div class="flex flex-wrap gap-4 justify-center md:justify-start">
+                    <div class="border-l-4 border-red-600 pl-4">
+                        <span class="block text-2xl font-bold text-black">6 Years</span>
+                        <span class="text-xs uppercase tracking-wide text-gray-500">Premier Casino Exp</span>
+                    </div>
+                    <div class="border-l-4 border-yellow-500 pl-4">
+                        <span class="block text-2xl font-bold text-black">B.S.</span>
+                        <span class="text-xs uppercase tracking-wide text-gray-500">Computer Info Systems</span>
+                    </div>
+                    <div class="border-l-4 border-black pl-4">
+                        <span class="block text-2xl font-bold text-black">GM</span>
+                        <span class="text-xs uppercase tracking-wide text-gray-500">Management History</span>
+                    </div>
                 </div>
             </div>
-            <div class="mt-8 text-sm text-slate-400">
-                <p>Crescent City, CA • (707) 218-1421 • aaroncrume@gmail.com</p>
+
+            <!-- Visualization: The Medicine Wheel of Skills -->
+            <div class="md:w-1/2 mt-12 md:mt-0 flex justify-center relative">
+                <!-- Decorative Circle Background -->
+                <div class="absolute w-64 h-64 border-8 border-gray-100 rounded-full opacity-50"></div>
+                
+                <div class="chart-container">
+                    <canvas id="wheelChart"></canvas>
+                </div>
+                
+                <!-- Center Icon -->
+                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-2 rounded-full border-2 border-black shadow-xl">
+                    <span class="text-2xl">⚡</span>
+                </div>
             </div>
         </div>
     </header>
 
-    <!-- Introduction to Analytics -->
-    <div class="max-w-6xl mx-auto px-4 pt-12 pb-4 sm:px-6 lg:px-8">
-        <div class="bg-rose-50 border-l-4 border-rose-600 p-4 rounded-r shadow-sm">
-            <h3 class="text-lg font-bold text-rose-800 mb-2">Executive Summary & Analytics</h3>
-            <p class="text-rose-900 text-sm">
-                This dashboard visualizes the core strengths derived from my professional history. 
-                It demonstrates a balance between direct service excellence and high-level operational management—key requirements for the Lead Server role at Lucky 7 Casino.
-            </p>
-        </div>
-    </div>
-
-    <!-- Analytics Dashboard -->
-    <section id="dashboard" class="max-w-6xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <!-- Chart 1: Experience Timeline -->
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-                <h3 class="text-lg font-semibold text-slate-800 mb-4 text-center">Tenure by Venue (Years)</h3>
-                <p class="text-xs text-slate-500 text-center mb-4">Demonstrating loyalty and long-term commitment to employers.</p>
-                <div class="chart-container">
-                    <canvas id="tenureChart"></canvas>
-                </div>
+    <!-- Section: The Lead Philosophy (Duties Integration) -->
+    <section id="philosophy" class="py-16 bg-white border-t border-gray-200">
+        <div class="max-w-4xl mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-black mb-4">The Four Directions of Leadership</h2>
+                <div class="w-24 h-1 bg-red-600 mx-auto"></div>
+                <p class="mt-4 text-gray-600">Integrating the duties of a Lead Server through a holistic approach.</p>
             </div>
-            <!-- Chart 2: Competency Balance -->
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-                <h3 class="text-lg font-semibold text-slate-800 mb-4 text-center">Core Competency Mix</h3>
-                <p class="text-xs text-slate-500 text-center mb-4">Balancing front-of-house warmth with back-of-house precision.</p>
-                <div class="chart-container">
-                    <canvas id="skillsChart"></canvas>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- North: Wisdom/Training -->
+                <div class="p-6 border-2 border-gray-100 hover:border-black transition duration-300">
+                    <div class="text-black text-4xl mb-4 font-bold opacity-20">01</div>
+                    <h3 class="text-xl font-bold mb-2">North: Training & Mentorship</h3>
+                    <p class="text-sm text-gray-600 mb-4">"Assist Food and Beverage Manager in all aspects."</p>
+                    <p class="text-gray-800">
+                        Drawing on General Manager experience, I don't just supervise; I <span class="font-bold text-red-600">train</span>. 
+                        My focus is on elevating the team's standard of service, ensuring every server understands policies, procedures, and the "why" behind excellence.
+                    </p>
+                </div>
+
+                <!-- East: Innovation/Tech -->
+                <div class="p-6 border-2 border-gray-100 hover:border-yellow-500 transition duration-300">
+                    <div class="text-yellow-500 text-4xl mb-4 font-bold opacity-20">02</div>
+                    <h3 class="text-xl font-bold mb-2">East: Systems & Compliance</h3>
+                    <p class="text-sm text-gray-600 mb-4">"Understanding regulations and safety."</p>
+                    <p class="text-gray-800">
+                        With a <span class="font-bold text-yellow-600">B.S. in Computer Information Systems</span>, I bring a logical, systems-based approach to the floor. 
+                        I master POS systems quickly and enforce ABC/Federal regulations with the precision of a network administrator.
+                    </p>
+                </div>
+
+                <!-- South: Passion/Service -->
+                <div class="p-6 border-2 border-gray-100 hover:border-red-600 transition duration-300">
+                    <div class="text-red-600 text-4xl mb-4 font-bold opacity-20">03</div>
+                    <h3 class="text-xl font-bold mb-2">South: Guest Experience</h3>
+                    <p class="text-sm text-gray-600 mb-4">"Ensure all Guests feel welcome."</p>
+                    <p class="text-gray-800">
+                        Hospitality is the heartbeat. Whether carrying a tray or managing the floor, my goal is creating a 
+                        <span class="font-bold text-red-600">positive, productive environment</span> where guests feel honored and staff feel supported.
+                    </p>
+                </div>
+
+                <!-- West: Grounding/Ops -->
+                <div class="p-6 border-2 border-gray-100 hover:border-black transition duration-300">
+                    <div class="text-black text-4xl mb-4 font-bold opacity-20">04</div>
+                    <h3 class="text-xl font-bold mb-2">West: Operations & Assets</h3>
+                    <p class="text-sm text-gray-600 mb-4">"Control cash, stock, and equipment."</p>
+                    <p class="text-gray-800">
+                        Grounded in integrity. Extensive experience with <span class="font-bold text-black">Video Lottery reconciliation</span> and high-volume cash handling. 
+                        I treat the facility's assets—from inventory to equipment maintenance—with ownership and care.
+                    </p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Experience Timeline Intro -->
-    <div class="max-w-4xl mx-auto px-4 pt-12 pb-4 sm:px-6 lg:px-8 text-center">
-        <h2 class="text-3xl font-bold text-slate-900 mb-4">Professional Journey</h2>
-        <p class="text-slate-600 mb-8">
-            An interactive look at my employment history. Click on any role to view detailed responsibilities, specifically highlighting experience relevant to casino operations and team leadership.
-        </p>
-    </div>
-
-    <!-- Interactive Timeline -->
-    <section id="timeline" class="max-w-6xl mx-auto px-4 pb-16 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Timeline Selector (Left Column) -->
-            <div class="lg:col-span-1 relative">
-                <div class="hidden lg:block timeline-line"></div>
-                <div class="space-y-8 relative z-10" id="timeline-nav">
-                    <!-- Nav items injected by JS -->
-                </div>
+    <!-- Section: The Path (Timeline) -->
+    <section id="path" class="py-16 bg-neutral-100">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-black">The Path Taken</h2>
+                <p class="text-gray-600 mt-2">A journey of 25+ years in hospitality and technology.</p>
             </div>
 
-            <!-- Detail View (Right Column) -->
-            <div class="lg:col-span-2">
-                <div id="role-details" class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-rose-600 transition-all duration-300">
-                    <!-- Dynamic Content -->
-                    <div class="animate-pulse flex space-x-4">
-                        <div class="flex-1 space-y-4 py-1">
-                            <div class="h-4 bg-slate-200 rounded w-3/4"></div>
-                            <div class="space-y-2">
-                                <div class="h-4 bg-slate-200 rounded"></div>
-                                <div class="h-4 bg-slate-200 rounded w-5/6"></div>
-                            </div>
-                        </div>
+            <div class="flex flex-col md:flex-row gap-8">
+                <!-- Timeline List -->
+                <div class="md:w-1/3 relative" id="timeline-container">
+                    <div class="absolute left-4 top-0 bottom-0 w-1 bg-gray-300 ml-3"></div>
+                    <!-- Nodes injected via JS -->
+                </div>
+
+                <!-- Detail View -->
+                <div class="md:w-2/3">
+                    <div id="role-display" class="bg-white p-8 border-l-8 border-red-600 shadow-lg h-full transition-all duration-300">
+                        <!-- Dynamic Content -->
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Skills & Competencies Intro -->
-    <div class="max-w-6xl mx-auto px-4 pt-8 pb-4 sm:px-6 lg:px-8">
-        <div class="bg-white border border-slate-200 rounded-lg p-6 text-center">
-            <h3 class="text-xl font-bold text-slate-800 mb-2">Operational Readiness</h3>
-            <p class="text-slate-600 text-sm">
-                Specific technical and soft skills that ensure I can hit the ground running at Lucky 7 Casino Enterprises.
-            </p>
-        </div>
-    </div>
-
-    <!-- Competencies Grid -->
-    <section id="skills" class="max-w-6xl mx-auto px-4 py-8 sm:px-6 lg:px-8 mb-16">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- Card 1 -->
-            <div class="bg-slate-50 p-6 rounded-lg border border-slate-200 hover:border-rose-300 transition-colors">
-                <div class="text-rose-600 text-2xl mb-3">★</div>
-                <h4 class="font-bold text-slate-900 mb-2">Leadership & Training</h4>
-                <ul class="text-sm text-slate-600 space-y-2">
-                    <li>• General Manager Experience</li>
-                    <li>• Staff Training Program Implementation</li>
-                    <li>• Team Supervision & Scheduling</li>
-                    <li>• Conflict Resolution</li>
-                </ul>
+    <!-- Section: Technical Proficiency -->
+    <section id="tech" class="py-16 bg-black text-white">
+        <div class="max-w-5xl mx-auto px-4 flex flex-col md:flex-row items-center gap-12">
+            <div class="md:w-1/2">
+                <h2 class="text-4xl text-yellow-500 mb-6 font-bold">The Technical Edge</h2>
+                <div class="space-y-6 text-gray-300">
+                    <p>
+                        In a modern restaurant environment, technology is the backbone of efficiency. Unlike a typical Lead Server, I possess a 
+                        <strong class="text-white">Bachelor of Science in Computer Information Systems: Network Administration</strong>.
+                    </p>
+                    <p>
+                        This background allows me to:
+                    </p>
+                    <ul class="space-y-3">
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-red-500 mr-3"></span>
+                            Troubleshoot POS issues instantly during peak hours.
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-red-500 mr-3"></span>
+                            Master inventory software and variances with analytical precision.
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-red-500 mr-3"></span>
+                            Understand the security protocols behind gaming and financial transactions.
+                        </li>
+                    </ul>
+                </div>
             </div>
-            <!-- Card 2 -->
-            <div class="bg-slate-50 p-6 rounded-lg border border-slate-200 hover:border-rose-300 transition-colors">
-                <div class="text-rose-600 text-2xl mb-3">♦</div>
-                <h4 class="font-bold text-slate-900 mb-2">Casino & Cash Ops</h4>
-                <ul class="text-sm text-slate-600 space-y-2">
-                    <li>• Video Lottery Reconciliation</li>
-                    <li>• Strict 21+ Policy Enforcement</li>
-                    <li>• High-Volume Cash Handling</li>
-                    <li>• Daily Bank Management</li>
-                </ul>
-            </div>
-            <!-- Card 3 -->
-            <div class="bg-slate-50 p-6 rounded-lg border border-slate-200 hover:border-rose-300 transition-colors">
-                <div class="text-rose-600 text-2xl mb-3">✓</div>
-                <h4 class="font-bold text-slate-900 mb-2">Certifications & Tech</h4>
-                <ul class="text-sm text-slate-600 space-y-2">
-                    <li>• ABC / Alcohol Server Certified (CA/OR)</li>
-                    <li>• ServSafe Certified</li>
-                    <li>• POS Systems Proficiency</li>
-                    <li>• Inventory Management Software</li>
-                </ul>
+            <div class="md:w-1/2 w-full">
+                <div class="bg-neutral-900 p-6 border border-neutral-800">
+                    <h3 class="text-center text-sm uppercase tracking-widest mb-4 text-gray-500">Skill Composition</h3>
+                    <div class="chart-container" style="height: 250px;">
+                        <canvas id="techChart"></canvas>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="bg-slate-800 text-slate-300 py-12">
-        <div class="max-w-4xl mx-auto px-4 text-center">
-            <h2 class="text-2xl font-bold text-white mb-6">Ready to Lead Your Team</h2>
-            <p class="mb-8 max-w-xl mx-auto">
-                I am eager to bring my 25+ years of experience, reliability, and management expertise to the Lucky 7 Casino Enterprises team.
-            </p>
-            <div class="flex justify-center gap-4">
-                <a href="mailto:aaroncrume@gmail.com" class="bg-rose-600 hover:bg-rose-700 text-white font-bold py-3 px-8 rounded-full transition-colors">
-                    Contact via Email
-                </a>
-                <span class="flex items-center text-slate-400 font-mono">(916) 889-4582</span>
+    <footer class="bg-white py-8 border-t-4 border-black">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-black font-bold text-xl tribal-font mb-2">Aaron Lee Crume</p>
+            <p class="text-gray-500 text-sm mb-4">Crescent City, CA | (916) 889-4582 | aaroncrume@gmail.com</p>
+            <div class="flex justify-center space-x-2">
+                <div class="w-2 h-2 bg-red-600 rounded-full"></div>
+                <div class="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                <div class="w-2 h-2 bg-black rounded-full"></div>
             </div>
-            <p class="mt-12 text-sm text-slate-500">Based on the Resume of Aaron Lee Crume • Generated for Interactive Review</p>
         </div>
     </footer>
 
     <!-- JavaScript Logic -->
     <script>
-        // Data Store based on Resume
-        const resumeData = {
-            roles: [
-                {
-                    id: 'harbor',
-                    title: 'Bartender / Service Lead',
-                    company: 'The Harbor View Grotto',
-                    location: 'Crescent City, CA',
-                    period: 'July 2011 – Present',
-                    years: 12.5,
-                    description: 'A fine casual seafood and steak house. Key role in maintaining service standards for a decade.',
-                    bullets: [
-                        '**Service Bar Management:** Managed high-volume drink production for the entire dining room while serving bar guests simultaneously.',
-                        '**Guest Retention:** Built a loyal clientele through consistent, friendly interaction, directly contributing to repeat business.',
-                        '**Operational Excellence:** Maintained high sanitation standards and managed general stocking/inventory.',
-                        '**Reliability:** Proven track record of long-term stability and performance.'
-                    ],
-                    icon: '⚓'
-                },
-                {
-                    id: 'melita',
-                    title: 'General Manager',
-                    company: 'Melita’s Restaurant & Lounge',
-                    location: 'Chiloquin, OR',
-                    period: 'Mar 2009 – Mar 2011',
-                    years: 2,
-                    description: 'Total operational control of a multi-faceted business (Steakhouse, Lounge, Motel, RV Park).',
-                    bullets: [
-                        '**Training & QA:** Oversaw and implemented comprehensive employee training programs to ensure service consistency.',
-                        '**Compliance:** Enforced quality and safety controls pursuant to Oregon Health Code.',
-                        '**Financial Ops:** Handled all record-keeping for the Motel, Restaurant, and Lounge.',
-                        '**Leadership:** Filled in for all shifts as needed, demonstrating "lead by example" management style.'
-                    ],
-                    icon: '💼'
-                },
-                {
-                    id: 'moores',
-                    title: 'Bartender / Assistant Manager',
-                    company: 'Moores Riverboat II',
-                    location: 'Isleton, CA',
-                    period: 'Mar 2006 – Oct 2008',
-                    years: 2.5,
-                    description: 'Floating full-service restaurant with live entertainment and fine dining.',
-                    bullets: [
-                        '**Staff Supervision:** Overlooked wait staff on the floor and assisted with expediting during rush hours.',
-                        '**POS Management:** Served wait staff beverages through POS system integration.',
-                        '**Event Management:** Maintained bar operations during high-traffic live entertainment events.',
-                        '**Customer Satisfaction:** Ensured high-quality guest experiences in a unique dining environment.'
-                    ],
-                    icon: '🚢'
-                },
-                {
-                    id: 'hollywood',
-                    title: 'Bartender / Bar Team Lead',
-                    company: 'Hollywood Bowl',
-                    location: 'Portland, OR',
-                    period: 'Nov 2000 – Dec 2004',
-                    years: 4,
-                    description: 'High-volume venue with significant gaming/lottery components.',
-                    bullets: [
-                        '**Team Leadership:** Led the bar team, including supervision of cocktail waitresses.',
-                        '**Casino-Style Gaming:** Managed Oregon Video Lottery machines, including income counting and reconciliation.',
-                        '**Strict Compliance:** Enforced strict 21+ policies and responsible service standards.',
-                        '**Inventory:** Managed ordering, stocking, and daily preparation for lounge operations.'
-                    ],
-                    icon: '🎳'
-                }
-            ]
-        };
+        // Data Store
+        const careerData = [
+            {
+                id: 1,
+                role: "Bartender / Service Lead",
+                company: "The Harbor View Grotto",
+                location: "Crescent City, CA",
+                years: "2011 – Present",
+                color: "border-black",
+                summary: "Decade-long tenure in fine casual seafood & steak dining.",
+                details: [
+                    "Managed service bar for entire dining room while maintaining high-touch guest interaction.",
+                    "Demonstrated extreme reliability and consistency over 12+ years.",
+                    "Maintained high sanitation standards and inventory controls."
+                ]
+            },
+            {
+                id: 2,
+                role: "Bartender (6 Year Tenure)",
+                company: "Premier Regional Casino", 
+                location: "Smith River, CA",
+                years: "Casino Experience",
+                color: "border-red-600",
+                summary: "Extensive background in high-volume gaming and hospitality environments.",
+                details: [
+                    "Mastered the specific pace and compliance requirements of a 24/7 casino floor.",
+                    "Handled high-volume transactions and strict alcohol service regulations.",
+                    "Developed deep understanding of the local gaming clientele and service expectations."
+                ]
+            },
+            {
+                id: 3,
+                role: "General Manager",
+                company: "Melita’s Restaurant & Lounge",
+                location: "Chiloquin, OR",
+                years: "2009 – 2011",
+                color: "border-yellow-500",
+                summary: "Total operational oversight of Restaurant, Lounge, Motel & RV Park.",
+                details: [
+                    "Implemented employee training programs to assure customer satisfaction.",
+                    "Enforced Oregon Health Code quality and safety controls.",
+                    "Managed all record-keeping and financial reconciliation for multiple business units."
+                ]
+            },
+            {
+                id: 4,
+                role: "Bartender / Team Lead",
+                company: "Hollywood Bowl / Moore's",
+                location: "Portland/Isleton",
+                years: "2000 – 2008",
+                color: "border-black",
+                summary: "Leadership in entertainment and gaming venues.",
+                details: [
+                    "Led bar teams and supervised cocktail waitresses.",
+                    "Managed Oregon Video Lottery income counting and reconciliation.",
+                    "Expedited food orders and managed floor staff during live entertainment events."
+                ]
+            }
+        ];
 
-        // State Management
-        let currentRoleIndex = 0;
-
-        // Initialization
+        // Init
         document.addEventListener('DOMContentLoaded', () => {
-            initCharts();
+            renderWheelChart();
+            renderTechChart();
             renderTimeline();
-            updateRoleView(0);
+            updateRole(0); // Load first item
         });
 
-        // Chart Initialization
-        function initCharts() {
-            // Chart 1: Tenure
-            const ctxTenure = document.getElementById('tenureChart').getContext('2d');
-            new Chart(ctxTenure, {
-                type: 'bar',
+        // Scroll Helper
+        function scrollToId(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // 1. Medicine Wheel Chart (Doughnut)
+        function renderWheelChart() {
+            const ctx = document.getElementById('wheelChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
                 data: {
-                    labels: resumeData.roles.map(r => r.company.split(' ')[0]), // Short names
+                    labels: ['Management (North)', 'Technology (East)', 'Service (South)', 'Operations (West)'],
                     datasets: [{
-                        label: 'Years of Service',
-                        data: resumeData.roles.map(r => r.years),
+                        data: [25, 25, 25, 25], // Equal balance
                         backgroundColor: [
-                            'rgba(190, 24, 93, 0.8)', // Rose 700
-                            'rgba(71, 85, 105, 0.6)', // Slate 600
-                            'rgba(71, 85, 105, 0.6)',
-                            'rgba(71, 85, 105, 0.6)'
+                            '#ffffff', // North/White
+                            '#F2A900', // East/Yellow
+                            '#D92525', // South/Red
+                            '#1a1a1a'  // West/Black
                         ],
-                        borderWidth: 0,
-                        borderRadius: 4
+                        borderColor: '#e5e5e5',
+                        borderWidth: 2,
+                        hoverOffset: 10
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    cutout: '60%',
                     plugins: {
                         legend: { display: false },
                         tooltip: {
                             callbacks: {
-                                title: (items) => resumeData.roles[items[0].dataIndex].company
+                                label: function(context) {
+                                    const labels = [
+                                        "GM Experience, Training, Wisdom",
+                                        "BS Degree, POS Systems, Innovation",
+                                        "Guest Focus, Passion, Energy",
+                                        "Cash Handling, Compliance, Grounding"
+                                    ];
+                                    return labels[context.dataIndex];
+                                }
                             }
                         }
-                    },
-                    scales: {
-                        y: { beginAtZero: true, title: { display: true, text: 'Years' } },
-                        x: { grid: { display: false } }
                     }
                 }
             });
+        }
 
-            // Chart 2: Skills Radar
-            const ctxSkills = document.getElementById('skillsChart').getContext('2d');
-            new Chart(ctxSkills, {
-                type: 'radar',
+        // 2. Tech Chart (Bar)
+        function renderTechChart() {
+            const ctx = document.getElementById('techChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
                 data: {
-                    labels: ['Leadership', 'Guest Service', 'Compliance', 'Cash/Ops', 'Training', 'Tech/POS'],
+                    labels: ['Hospitality', 'Network Admin', 'Compliance', 'Leadership'],
                     datasets: [{
-                        label: 'Proficiency Level',
-                        data: [85, 95, 90, 85, 80, 75], // Estimated based on resume emphasis
-                        backgroundColor: 'rgba(190, 24, 93, 0.2)',
-                        borderColor: 'rgba(190, 24, 93, 1)',
-                        pointBackgroundColor: 'rgba(190, 24, 93, 1)',
-                        pointBorderColor: '#fff',
-                        pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: 'rgba(190, 24, 93, 1)'
+                        label: 'Skill Depth',
+                        data: [95, 85, 90, 80],
+                        backgroundColor: '#F2A900',
+                        barThickness: 20
                     }]
                 },
                 options: {
+                    indexAxis: 'y',
                     responsive: true,
                     maintainAspectRatio: false,
                     scales: {
-                        r: {
-                            angleLines: { display: true },
-                            suggestedMin: 0,
-                            suggestedMax: 100,
-                            ticks: { display: false } // Hide numbers for cleaner look
-                        }
+                        x: { grid: { color: '#333' }, ticks: { color: '#888' } },
+                        y: { grid: { display: false }, ticks: { color: '#fff', font: { family: 'Oswald' } } }
                     },
-                    plugins: {
-                        legend: { display: false }
-                    }
+                    plugins: { legend: { display: false } }
                 }
             });
         }
 
-        // Timeline Render Logic
+        // 3. Timeline Renderer
         function renderTimeline() {
-            const container = document.getElementById('timeline-nav');
-            container.innerHTML = '';
-
-            resumeData.roles.forEach((role, index) => {
-                const item = document.createElement('div');
-                item.className = `timeline-item flex items-center cursor-pointer group mb-6 ${index === 0 ? 'active' : ''}`;
-                item.onclick = () => updateRoleView(index);
-
-                // Setup the dot and label
-                item.innerHTML = `
-                    <div class="timeline-dot w-6 h-6 rounded-full border-4 border-slate-300 bg-white mr-4 transition-all duration-300 group-hover:border-rose-400 z-10 flex-shrink-0"></div>
-                    <div class="flex-1">
-                        <p class="text-sm font-bold text-slate-700 group-hover:text-rose-600 transition-colors">${role.period}</p>
-                        <p class="text-xs text-slate-500">${role.company}</p>
-                    </div>
-                `;
-                container.appendChild(item);
-            });
-        }
-
-        // Update Detail View
-        function updateRoleView(index) {
-            currentRoleIndex = index;
-            const role = resumeData.roles[index];
-            const detailsContainer = document.getElementById('role-details');
-
-            // Update visual state of timeline items
-            const items = document.querySelectorAll('.timeline-item');
-            items.forEach((item, i) => {
-                if (i === index) {
-                    item.classList.add('active');
-                    item.querySelector('.timeline-dot').classList.add('bg-rose-600');
-                } else {
-                    item.classList.remove('active');
-                    item.querySelector('.timeline-dot').classList.remove('bg-rose-600');
-                }
-            });
-
-            // Animate content change
-            detailsContainer.style.opacity = '0';
+            const container = document.getElementById('timeline-container');
             
-            setTimeout(() => {
-                // Generate bullet points HTML
-                const bulletsHtml = role.bullets.map(b => {
-                    // Simple bold formatting replacement
-                    const formatted = b.replace(/\*\*(.*?)\*\*/g, '<span class="font-bold text-slate-800">$1</span>');
-                    return `<li class="flex items-start"><span class="text-rose-500 mr-2 mt-1">▸</span><span>${formatted}</span></li>`;
-                }).join('');
+            careerData.forEach((item, index) => {
+                const node = document.createElement('div');
+                node.className = `timeline-node flex items-center mb-8 cursor-pointer group transition-all duration-300 transform hover:translate-x-2`;
+                node.onclick = () => {
+                    updateRole(index);
+                    highlightNode(index);
+                };
+                
+                // Colors for the node dots
+                let dotColor = 'bg-white border-gray-400';
+                if (index === 1) dotColor = 'bg-red-600 border-red-600'; // Casino
 
-                detailsContainer.innerHTML = `
-                    <div class="flex justify-between items-start mb-6 border-b border-slate-100 pb-4">
-                        <div>
-                            <h3 class="text-2xl font-bold text-slate-800">${role.title}</h3>
-                            <p class="text-lg text-rose-600 font-medium">${role.company}</p>
-                            <p class="text-sm text-slate-500 mt-1 flex items-center">
-                                <span class="mr-2">📍 ${role.location}</span>
-                                <span class="bg-slate-100 px-2 py-0.5 rounded text-xs text-slate-600 font-mono">${role.period}</span>
-                            </p>
-                        </div>
-                        <div class="text-4xl opacity-20">${role.icon}</div>
+                node.innerHTML = `
+                    <div class="z-10 w-8 h-8 rounded-full border-4 ${dotColor} flex-shrink-0 ml-1 shadow-sm group-hover:border-black transition-colors" id="node-${index}"></div>
+                    <div class="ml-4">
+                        <span class="block text-sm font-bold text-gray-400 uppercase tracking-widest">${item.years}</span>
+                        <span class="block text-lg font-bold text-black group-hover:text-red-600 transition-colors tribal-font">${item.role}</span>
                     </div>
-                    <p class="text-slate-600 italic mb-6">${role.description}</p>
-                    <h4 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Key Responsibilities & Achievements</h4>
-                    <ul class="space-y-3 text-slate-700 leading-relaxed">
-                        ${bulletsHtml}
-                    </ul>
                 `;
-                detailsContainer.style.opacity = '1';
-            }, 200);
+                container.appendChild(node);
+            });
         }
 
-        // Smooth Scroll
-        function scrollToSection(id) {
-            const element = document.getElementById(id);
-            if (element) {
-                element.scrollIntoView({ behavior: 'smooth' });
-            }
-            // Update active nav state
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-        }
+        // 4. Update Detail View
+        function updateRole(index) {
+            const role = careerData[index];
+            const display = document.getElementById('role-display');
+            
+            // Highlight logic
+            document.querySelectorAll('.timeline-node div:first-child').forEach((el, i) => {
+                if(i === index) el.classList.add('ring-4', 'ring-yellow-200');
+                else el.classList.remove('ring-4', 'ring-yellow-200');
+            });
 
+            // Content Injection
+            display.innerHTML = `
+                <div class="animate-fade-in">
+                    <h3 class="text-4xl font-black text-black mb-1 tribal-font">${role.role}</h3>
+                    <div class="flex items-center text-red-600 font-bold mb-6 text-sm uppercase tracking-widest">
+                        <span class="mr-2">📍 ${role.location}</span>
+                        <span>• ${role.years}</span>
+                    </div>
+                    
+                    <p class="text-xl font-light text-gray-800 italic mb-8 border-b border-gray-100 pb-4">
+                        "${role.summary}"
+                    </p>
+                    
+                    <h4 class="font-bold text-black uppercase tracking-widest mb-4 text-sm">Key Contributions</h4>
+                    <ul class="space-y-4">
+                        ${role.details.map(d => `
+                            <li class="flex items-start">
+                                <span clasclasss="text-yellow-500 mr-3 text-xl">▸</span>
+                                <span class="text-gray-700 leading-relaxed">${d}</span>
+                            </li>
+                        `).join('')}
+                    </ul>
+                </div>
+            `;
+        }
     </script>
 </body>
 </html>
